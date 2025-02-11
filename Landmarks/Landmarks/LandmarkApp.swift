@@ -8,10 +8,13 @@
 import SwiftUI
 
 @main
-struct Building_lists_and_navigationApp: App {
+struct LandmarkApp: App {
+    @State private var modelData = ModelData()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(modelData)
         }
     }
 }
