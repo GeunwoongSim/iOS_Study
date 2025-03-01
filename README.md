@@ -6,5 +6,5 @@ iOS를 공부하면서 작성한 실습 내용과 프로젝틀를 정리하는 R
 <!-- |<img src = "" width ="250">|-->
 |이름|이미지|내용|
 |---|---|---|
-|Landmarks|||SwiftUI 공식 튜토리얼|
+|Landmarks||SwiftUI 공식 튜토리얼|
 |Calculator_SwiftUI|<img src = "https://github.com/user-attachments/assets/0628026c-51d7-4dd0-9360-beaec2ba67a6" width ="250">|SwiftUI+Combine 공부용 계산기 앱|
