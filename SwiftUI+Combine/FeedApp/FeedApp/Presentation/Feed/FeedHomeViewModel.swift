@@ -11,13 +11,16 @@ import Foundation
 class FeedHomeViewModel: ObservableObject {
   @Published var feeds: [Feed] = []
   
+  
   func fetchFeeds() {
     Task {
+      
       do {
-        feeds = try await FirebaseManager.shared.fetchAllFeeds()
+        feeds = try await FirestoreManager.shared.fetchAllFeeds()
       } catch {
         print(error.localizedDescription)
       }
+      
     }
   }
 }

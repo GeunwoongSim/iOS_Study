@@ -18,50 +18,50 @@ struct CreatePostView: View {
   // MARK: - PhotosUI 관련 프로퍼티
   @State private var selectedImage: UIImage?
   
-    var body: some View {
-      NavigationStack {
-        VStack {
-          GeometryReader { geometry in
-            if let image = selectedImage {
-              Image(uiImage: image)
-                .resizable()
-                .scaledToFill()
-                .frame(width: geometry.size.width, height: geometry.size.width)
-                .clipped()
-            } else {
-              Rectangle()
-                .fill(Color.gray.opacity(0.2))
-                .frame(width: geometry.size.width, height: geometry.size.width)
-                .overlay(Text("이미지를 선택하세요"))
-            }
-          }
-          .frame(height: UIScreen.main.bounds.width)
-          EmbeddedImagePicker(selectedImage: $selectedImage)
-        }
-        .navigationTitle("새 게시물")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-          ToolbarItem(placement: .topBarLeading) {
-            Button("닫기") {
-              dismiss()
-            }
-          }
-          
-          ToolbarItem(placement: .topBarTrailing) {
-            Button("다음") {
-              navigateToDetail = true
-            }
-            .disabled(selectedImage == nil)
-          }
-        }
-        .navigationDestination(isPresented: $navigateToDetail) {
+  var body: some View {
+    NavigationStack {
+      VStack {
+        GeometryReader { geometry in
           if let image = selectedImage {
-            CreatePostDetailView(
-              showPostView: $showPostView,
-              image: image
-            )
+            Image(uiImage: image)
+              .resizable()
+              .scaledToFill()
+              .frame(width: geometry.size.width, height: geometry.size.width)
+              .clipped()
+          } else {
+            Rectangle()
+              .fill(Color.gray.opacity(0.2))
+              .frame(width: geometry.size.width, height: geometry.size.width)
+              .overlay(Text("이미지를 선택하세요"))
           }
+        }
+        .frame(height: UIScreen.main.bounds.width)
+        EmbeddedImagePicker(selectedImage: $selectedImage)
+      }
+      .navigationTitle("새 게시물")
+      .navigationBarTitleDisplayMode(.inline)
+      .toolbar {
+        ToolbarItem(placement: .topBarLeading) {
+          Button("닫기") {
+            dismiss()
+          }
+        }
+        
+        ToolbarItem(placement: .topBarTrailing) {
+          Button("다음") {
+            navigateToDetail = true
+          }
+          .disabled(selectedImage == nil)
+        }
+      }
+      .navigationDestination(isPresented: $navigateToDetail) {
+        if let image = selectedImage {
+          CreatePostDetailView(
+            showPostView: $showPostView,
+            image: image
+          )
         }
       }
     }
+  }
 }

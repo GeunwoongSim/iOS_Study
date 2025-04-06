@@ -2,7 +2,7 @@
 //  MainTabView.swift
 //  FeedApp
 //
-//  Created by 심근웅 on 4/4/25.
+//  Created by 심근웅 on 4/6/25.
 //
 
 import SwiftUI
@@ -14,6 +14,7 @@ struct MainTabView: View {
   @State private var showPostView: Bool = false
   
   var body: some View {
+    
     TabView(selection: $selectedTab) {
       FeedHomeView()
         .tabItem {
@@ -23,16 +24,15 @@ struct MainTabView: View {
       
       Color.clear
         .tabItem {
-          Image(systemName: "plus.circle.fill")
+          Image(systemName: "plus.app")
         }
         .tag(1)
       
       MyPageView()
         .tabItem {
-          Image(systemName: "person.circle.fill")
+          Image(systemName: "person.crop.square")
         }
         .tag(2)
-      
     }
     .onChange(of: selectedTab) { oldValue, newValue in
       if newValue == 1 {
@@ -46,8 +46,3 @@ struct MainTabView: View {
     }
   }
 }
-
-#Preview {
-  MainTabView()
-}
-

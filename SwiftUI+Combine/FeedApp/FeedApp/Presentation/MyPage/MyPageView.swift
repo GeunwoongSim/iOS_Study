@@ -2,7 +2,7 @@
 //  MyPageView.swift
 //  FeedApp
 //
-//  Created by 심근웅 on 4/4/25.
+//  Created by 심근웅 on 4/6/25.
 //
 
 import SwiftUI
@@ -18,6 +18,7 @@ struct MyPageView: View {
   
   var body: some View {
     NavigationStack {
+      
       ScrollView {
         LazyVGrid(columns: columns, spacing: 0) {
           ForEach(viewModel.myFeeds) { post in
@@ -35,22 +36,28 @@ struct MyPageView: View {
           }
         }
       }
-      .onAppear {
-        viewModel.fetchFeeds()
-      }
-      .navigationTitle("\(FirebaseManager.shared.currentId ?? "알 수 없음")")
-      .navigationBarTitleDisplayMode(.large)
+      .onAppear { viewModel.fetchFeeds() }
+      .navigationTitle("\(AuthManager.shared.user?.uid ?? "사용자")")
+      .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .topBarTrailing) {
           Menu {
-            Button ("로그아웃") {
+            Button("오래된 순 보기") {
+              
+            }
+            Button("닉네임 변경") {
+              print("닉네임 변경")
+            }
+            Button("로그아웃") {
               try? AuthManager.shared.logout()
             }
+            
           } label: {
             Image(systemName: "ellipsis")
           }
         }
-      }
+      } // toolbar 종료
     }
-  }
-}
+    
+  } // body 종료
+} // MyPageVew 종료
