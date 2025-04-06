@@ -13,10 +13,11 @@ struct MainTabView: View {
   @State private var selectedTab = 0
   @State private var showPostView: Bool = false
   
+  
   var body: some View {
     
     TabView(selection: $selectedTab) {
-      FeedHomeView()
+      FeedHomeView(refreshTrigger: $selectedTab)
         .tabItem {
           Image(systemName: "house")
         }

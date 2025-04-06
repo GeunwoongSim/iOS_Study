@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct MyPageView: View {
+  @StateObject private var authManager = AuthManager.shared
   @StateObject private var viewModel = MyPageViewModel()
+  @State private var showNameEdit = false
+  @State private var newName = ""
+  
   
   let columns = [
     GridItem(.flexible(), spacing: 0),
@@ -36,24 +40,38 @@ struct MyPageView: View {
           }
         }
       }
+      .refreshable { viewModel.fetchFeeds() }
       .onAppear { viewModel.fetchFeeds() }
-      .navigationTitle("\(AuthManager.shared.user?.uid ?? "사용자")")
-      .navigationBarTitleDisplayMode(.inline)
+      .navigationTitle("\(authManager.userName ?? "사용자")")
+      .navigationBarTitleDisplayMode(.large)
       .toolbar {
         ToolbarItem(placement: .topBarTrailing) {
           Menu {
-            Button("오래된 순 보기") {
-              
+            
+            Button(viewModel.descending ? "오래된 순 보기" : "최신 순 보기") {
+              viewModel.descending.toggle()
+              viewModel.fetchFeeds()
             }
+            
             Button("닉네임 변경") {
-              print("닉네임 변경")
+              showNameEdit = true
             }
+            
             Button("로그아웃") {
-              try? AuthManager.shared.logout()
+              try? authManager.logout()
             }
             
           } label: {
             Image(systemName: "ellipsis")
+          }
+          .alert("닉네임 변경", isPresented: $showNameEdit) {
+            TextField("새 닉네임", text: $newName)
+            Button("취소", role: .cancel) { }
+            Button("저장") {
+              viewModel.updateNickname(newName: newName)
+            }
+          } message: {
+            Text("새 닉네임을 입력하세요")
           }
         }
       } // toolbar 종료

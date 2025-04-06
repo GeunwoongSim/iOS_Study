@@ -19,9 +19,9 @@ final class AuthManager: ObservableObject {
   // MARK: - Properties
   private let auth = Auth.auth()
   @Published var user: User?
-  var isLogin: Bool {
-    return user != nil
-  }
+  @Published var userName: String?
+  var isLogin: Bool { return user != nil }
+
   private var cancellables = Set<AnyCancellable>()
   
   // MARK: - Init
@@ -31,14 +31,32 @@ final class AuthManager: ObservableObject {
       .authStateDidChangePublisher()
       .receive(on: DispatchQueue.main)
       .sink { [weak self] user in
-        self?.user = user
+        guard let self = self else { return }
+        self.user = user
+        Task { await self.fetchUserName() }
       }
       .store(in: &cancellables)
   }
  
-  
   /// 로그아웃
   func logout() throws {
     try auth.signOut()
+  }
+  
+  func fetchUserName() async {
+    guard let uid = user?.uid else { return }
+    
+    do {
+      let doc = try await FirestoreManager.shared.loadUserDocument(uid: uid)
+      
+      if let data = doc.data(),
+         let name = data["name"] as? String {
+        await MainActor.run {
+          self.userName = name
+        }
+      }
+    } catch {
+      print(error.localizedDescription)
+    }
   }
 }

@@ -9,8 +9,7 @@ import SwiftUI
 import GoogleSignInSwift
 
 struct LoginView: View {
-  @State private var errorMessage: String?
-  @State var showAlert: Bool = false
+  @StateObject private var viewModel = LoginViewModel()
   
   var body: some View {
     VStack(spacing: 40) {
@@ -21,24 +20,16 @@ struct LoginView: View {
         .fontWeight(.medium)
       
       GoogleSignInButton {
-        Task {
-          do {
-            let user = try await GoogleSignInManager.shared.signInGoogle()
-            print(user)
-          } catch {
-            errorMessage = error.localizedDescription
-            showAlert = true
-          }
-        }
+        viewModel.googleLogin()
       }
       
       Spacer()
     }
     .padding()
-    .alert("로그인 실패", isPresented: $showAlert) {
+    .alert("로그인 실패", isPresented: $viewModel.showAlert) {
       Button("확인", role: .cancel) {}
     } message: {
-      Text(errorMessage ?? "알 수 없는 오류입니다.")
+      Text(viewModel.errorMessage ?? "알 수 없는 오류입니다.")
     }
   }
 }
