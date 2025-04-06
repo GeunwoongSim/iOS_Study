@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct MyPageView: View {
-  
-  @EnvironmentObject var appViewModel: AppViewModel
   @StateObject private var viewModel = MyPageViewModel()
   
   let columns = [
@@ -46,15 +44,7 @@ struct MyPageView: View {
         ToolbarItem(placement: .topBarTrailing) {
           Menu {
             Button ("로그아웃") {
-              Task {
-                do {
-                  try await FirebaseManager.shared.logout()
-                  print("로그아웃 성공: \(FirebaseManager.shared.currentId ?? "알 수 없음")")
-                  appViewModel.isLoggedIn = false
-                } catch {
-                  print(error.localizedDescription)
-                }
-              }
+              try? AuthManager.shared.logout()
             }
           } label: {
             Image(systemName: "ellipsis")

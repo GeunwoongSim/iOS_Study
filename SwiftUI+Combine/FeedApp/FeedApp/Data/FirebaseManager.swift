@@ -33,23 +33,6 @@ final class FirebaseManager {
   }
 }
 
-// MARK: - 로그인
-extension FirebaseManager {
-  
-  /// 로그인
-  func login(email: String, password: String) -> AnyPublisher<AuthDataResult, Error> {
-    return auth
-      .signIn(withEmail: email, password: password)
-      .eraseToAnyPublisher()
-  }
-  
-  /// 로그아웃
-  func logout() async throws {
-    try auth.signOut()
-  }
-  
-}
-
 // MARK: - 피드
 extension FirebaseManager {
   

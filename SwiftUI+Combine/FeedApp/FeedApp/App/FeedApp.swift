@@ -14,31 +14,25 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
   ) -> Bool {
     FirebaseApp.configure()
-    
     return true
   }
 }
-
 
 @main
 struct FeedApp: App {
   
   @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-  @StateObject var appViewModel = AppViewModel()
+  @StateObject var authManager = AuthManager.shared
   
   var body: some Scene {
     WindowGroup {
-      if appViewModel.isLoggedIn {
+      if authManager.isLogin {
         MainTabView()
-          .transition(.opacity)
-          .animation(.easeInOut, value: appViewModel.isLoggedIn)
       } else {
         LoginView()
-          .transition(.opacity)
-          .animation(.easeInOut, value: appViewModel.isLoggedIn)
       }
     }
-    .environmentObject(appViewModel)
   }
+  
 }
 
