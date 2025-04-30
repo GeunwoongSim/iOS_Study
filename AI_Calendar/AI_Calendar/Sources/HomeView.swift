@@ -68,7 +68,7 @@ struct HomeView: View {
       EventAddView()
     }
     .sheet(isPresented: $showLLMAIView) {
-      
+      LLMChatView()
     }
   }
 }

@@ -14,12 +14,9 @@ struct AI_CalendarApp: App {
   var body: some Scene {
     WindowGroup {
       HomeView()
-        .environmentObject(EventManager(content: persistenceController.container.viewContext))
-//        .environment(
-//          \.managedObjectContext,
-//           persistenceController.container.viewContext
-//        )
-        
+        .environmentObject(
+          EventManager(content: persistenceController.container.viewContext)
+        )
     }
   }
 }
