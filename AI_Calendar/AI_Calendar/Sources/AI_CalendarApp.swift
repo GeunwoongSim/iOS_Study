@@ -9,14 +9,10 @@ import SwiftUI
 
 @main
 struct AI_CalendarApp: App {
-  let persistenceController = PersistenceController.shared
   
   var body: some Scene {
     WindowGroup {
       HomeView()
-        .environmentObject(
-          EventManager(content: persistenceController.container.viewContext)
-        )
     }
   }
 }

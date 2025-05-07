@@ -9,33 +9,35 @@ import Foundation
 import SwiftUI
 
 struct HomeView: View {
-  @EnvironmentObject var eventManager: EventManager
-  
+  @StateObject private var viewModel = HomeViewModel()
   @State private var showEventAddView: Bool = false
   @State private var showLLMAIView: Bool = false
   
   var body: some View {
     NavigationView {
       ZStack(alignment: .bottomTrailing) {
-        List(eventManager.events) { event in
-          HStack(alignment: .top, spacing: 12) {
-            // 날짜
-            Text(event.date ?? Date(), style: .date)
-              .font(.subheadline)
-              .frame(width: 80, alignment: .leading)
-            
-            // 제목 + 메모
-            VStack(alignment: .leading, spacing: 4) {
-              Text(event.title ?? "제목 없음")
-                .font(.headline)
-              if let memo = event.memo, !memo.isEmpty {
-                Text(memo)
-                  .font(.subheadline)
-                  .foregroundColor(.secondary)
+        List {
+          ForEach(viewModel.events) { event in
+            HStack(alignment: .top, spacing: 12) {
+              // 날짜
+              Text(event.date ?? Date(), style: .date)
+                .font(.subheadline)
+                .frame(width: 80, alignment: .leading)
+              
+              // 제목 + 메모
+              VStack(alignment: .leading, spacing: 4) {
+                Text(event.title ?? "제목 없음")
+                  .font(.headline)
+                if let memo = event.memo, !memo.isEmpty {
+                  Text(memo)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                }
               }
             }
+            .padding(.vertical, 6)
           }
-          .padding(.vertical, 6)
+          .onDelete(perform: deleteEvents)
         }
         
         Button {
@@ -64,18 +66,31 @@ struct HomeView: View {
         }
       }
     }
-    .sheet(isPresented: $showEventAddView) {
+    .sheet(isPresented: $showEventAddView, onDismiss: {
+      viewModel.loadEvents()
+    }) {
       EventAddView()
     }
-    .sheet(isPresented: $showLLMAIView) {
+    .sheet(isPresented: $showLLMAIView, onDismiss: {
+      viewModel.loadEvents()
+    }) {
       LLMChatView()
     }
+    .onAppear {
+      viewModel.loadEvents()
+    }
+  }
+  
+  private func deleteEvents(at offsets: IndexSet) {
+    offsets.forEach { index in
+      let event = viewModel.events[index]
+      viewModel.deleteEvent(e: event)           // ViewModel(CRUD) 호출
+    }
+    viewModel.loadEvents()
   }
 }
 
 #Preview {
-  let persistenceController = PersistenceController.shared
   HomeView()
-    .environmentObject(EventManager(content: persistenceController.container.viewContext))
 }
 

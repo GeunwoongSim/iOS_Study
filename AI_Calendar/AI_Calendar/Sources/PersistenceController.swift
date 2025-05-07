@@ -25,5 +25,19 @@ struct PersistenceController {
     }
     container.viewContext.automaticallyMergesChangesFromParent = true
   }
+  
+  /// Context의 변경점을 저장
+  func save(context: NSManagedObjectContext? = nil) {
+    let ctx = context ?? container.viewContext
+    guard ctx.hasChanges else { return }
+    do {
+      try ctx.save()
+    } catch {
+      let nsError = error as NSError
+      fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+    }
+  }
+  
+  
 }
 

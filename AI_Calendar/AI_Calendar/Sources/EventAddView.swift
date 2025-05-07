@@ -9,7 +9,6 @@ import SwiftUI
 
 struct EventAddView: View {
   
-  @EnvironmentObject var eventManager: EventManager
   @Environment(\.dismiss) private var dismiss
   
   // MARK: - 입력데이터
@@ -34,14 +33,13 @@ struct EventAddView: View {
       .toolbar {
         ToolbarItem(placement: .confirmationAction) {
           Button("저장") {
-            eventManager.addEvent(
+            CoreDateRepository.shared.addEvent(
               title: title,
               date: date,
               memo: memo
             )
             dismiss()
           }
-//          .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
         }
         ToolbarItem(placement: .cancellationAction) {
           Button("취소") {
